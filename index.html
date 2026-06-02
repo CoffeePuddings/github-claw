@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Guide · 开源 AI 知识库导航</title>
+    <meta
+      name="description"
+      content="AI Guide 导航官网：项目介绍、精选内容、路线图、更新日志与增长趋势。"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Space+Grotesk:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="noise"></div>
+    <header class="hero section">
+      <nav class="nav card">
+        <a class="brand" href="#top">AI Guide</a>
+        <div class="nav-links">
+          <a href="#featured">精选内容</a>
+          <a href="#roadmap">路线图</a>
+          <a href="#changelog">更新日志</a>
+          <a href="#growth">增长趋势</a>
+        </div>
+        <a class="btn btn-primary" href="https://github.com/CoffeePuddings/ai-guide" target="_blank" rel="noreferrer">访问仓库</a>
+      </nav>
+
+      <main id="top" class="hero-grid">
+        <section class="hero-main card glow">
+          <p class="tag">Open Source · AI Learning Hub</p>
+          <h1>一站式 AI 知识库导航官网</h1>
+          <p class="subtitle">
+            聚焦项目介绍、精选内容、学习路线、版本迭代与增长数据，
+            让更多开发者一眼看懂并愿意 Star 你的开源项目。
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="https://github.com/CoffeePuddings/ai-guide" target="_blank" rel="noreferrer">⭐ Star ai-guide</a>
+            <a class="btn btn-ghost" href="#featured">开始浏览</a>
+          </div>
+        </section>
+
+        <aside class="hero-side card">
+          <h2>项目速览</h2>
+          <ul class="metric-list">
+            <li><span>核心模块</span><strong>6</strong></li>
+            <li><span>精选主题</span><strong>120+</strong></li>
+            <li><span>最近更新</span><strong>每周</strong></li>
+            <li><span>学习路线</span><strong>初级→高级</strong></li>
+          </ul>
+        </aside>
+      </main>
+    </header>
+
+    <section id="featured" class="section">
+      <div class="section-title">
+        <h2>精选内容</h2>
+        <p>围绕实战价值筛选，帮助访问者快速进入高价值章节。</p>
+      </div>
+      <div class="cards-grid">
+        <article class="card content-card">
+          <h3>LLM 基础与提示工程</h3>
+          <p>从模型认知到 Prompt 结构化设计，覆盖可复用思维框架。</p>
+        </article>
+        <article class="card content-card">
+          <h3>RAG 与知识库构建</h3>
+          <p>检索增强流程、向量索引、评估指标与落地范式。</p>
+        </article>
+        <article class="card content-card">
+          <h3>AI Agent 实战</h3>
+          <p>工具调用、任务编排、记忆体系与生产场景经验。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="roadmap" class="section">
+      <div class="section-title">
+        <h2>路线图</h2>
+        <p>以季度节奏透明公开演进方向，增强社区参与感。</p>
+      </div>
+      <div class="timeline">
+        <div class="card timeline-item"><span>Q2</span><p>导航官网上线，建立内容分层与入口体系</p></div>
+        <div class="card timeline-item"><span>Q3</span><p>新增案例库与专题页，支持贡献者投稿流程</p></div>
+        <div class="card timeline-item"><span>Q4</span><p>推出多语言与自动化周报，提升全球可读性</p></div>
+      </div>
+    </section>
+
+    <section id="changelog" class="section">
+      <div class="section-title">
+        <h2>更新日志</h2>
+        <p>持续可见的迭代记录，展示项目活跃度与维护承诺。</p>
+      </div>
+      <div class="log-list card">
+        <div class="log-item"><time>2026-06-01</time><p>新增 Agent 工程化实战章节与导航聚合页</p></div>
+        <div class="log-item"><time>2026-05-25</time><p>优化 RAG 路线文档，补充评估与上线检查清单</p></div>
+        <div class="log-item"><time>2026-05-18</time><p>整理 AI 工具链地图，统一学习路径结构</p></div>
+      </div>
+    </section>
+
+    <section id="growth" class="section">
+      <div class="section-title">
+        <h2>增长趋势</h2>
+        <p>可视化展示仓库影响力变化，强化“值得关注”的第一印象。</p>
+      </div>
+      <div class="growth card">
+        <div class="chart-head">
+          <h3>近 12 周 Star 增长</h3>
+          <div class="chip" id="trendValue">+0%</div>
+        </div>
+        <svg viewBox="0 0 620 220" class="chart" aria-label="Star growth chart">
+          <polyline id="trendLine" fill="none" stroke-width="4" stroke="url(#lineGradient)" points=""></polyline>
+          <defs>
+            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#86efac"></stop>
+              <stop offset="100%" stop-color="#38bdf8"></stop>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="week-row" id="weekRow"></div>
+      </div>
+    </section>
+
+    <footer class="section footer">
+      <p>Made for <strong>ai-guide</strong> · 用高质量设计让开源内容被看见。</p>
+    </footer>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
