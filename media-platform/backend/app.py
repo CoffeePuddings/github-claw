@@ -79,20 +79,45 @@ def process_file():
     if not stored_name or not target_format:
         return jsonify({'error': 'stored_name and target_format are required'}), 400
 
-    filepath = os.path.join(UPLOAD_FOLDER, stored_name)
+    # Sanitize stored_name to prevent path traversal
+    safe_name = secure_filename(stored_name)
+    if not safe_name:
+        return jsonify({'error': 'Invalid filename'}), 400
+
+    filepath = os.path.join(UPLOAD_FOLDER, safe_name)
+    # Verify path stays within UPLOAD_FOLDER
+    if not os.path.realpath(filepath).startswith(os.path.realpath(UPLOAD_FOLDER)):
+        return jsonify({'error': 'Invalid file path'}), 400
     if not os.path.exists(filepath):
         return jsonify({'error': 'File not found'}), 404
 
     # Determine media type
-    media_type = get_media_type(stored_name)
+    media_type = get_media_type(safe_name)
     if not media_type:
         return jsonify({'error': 'Cannot determine media type'}), 400
+
+    # Validate target_format to prevent command injection
+    allowed_formats = {
+        'image': {'jpg', 'jpeg', 'png', 'webp', 'gif', 'bmp'},
+        'audio': {'mp3', 'wav', 'ogg', 'flac', 'aac'},
+        'video': {'mp4', 'avi', 'mkv', 'webm', 'mov'}
+    }
+    if target_format.lower() not in allowed_formats.get(media_type, set()):
+        return jsonify({'error': f'Unsupported target format: {target_format}'}), 400
+    target_format = target_format.lower()
+
+    # Validate quality is numeric
+    if quality is not None:
+        try:
+            quality = int(quality)
+        except (ValueError, TypeError):
+            return jsonify({'error': 'Quality must be a number'}), 400
 
     # Create task record
     db = get_db()
     cursor = db.execute(
         'INSERT INTO tasks (filename, original_path, media_type, operation, target_format, quality, status) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        (stored_name, filepath, media_type, operation, target_format, quality, 'processing')
+        (safe_name, filepath, media_type, operation, target_format, quality, 'processing')
     )
     task_id = cursor.lastrowid
     db.commit()
@@ -120,8 +145,8 @@ def process_file():
             'output_size': output_size,
             'compression_ratio': round(output_size / input_size * 100, 2) if input_size > 0 else 0
         })
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    except Exception:
+        return jsonify({'error': 'Processing failed'}), 500
 
 
 @app.route('/api/download/<filename>', methods=['GET'])
@@ -152,4 +177,4 @@ def get_task(task_id):
 
 if __name__ == '__main__':
     init_db()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)
