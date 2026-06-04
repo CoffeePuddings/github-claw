@@ -20,6 +20,9 @@ const points = growthData
 const trendLine = document.getElementById("trendLine");
 const trendValue = document.getElementById("trendValue");
 const weekRow = document.getElementById("weekRow");
+const starTotal = document.getElementById("starTotal");
+const weeklyAvg = document.getElementById("weeklyAvg");
+const growthSlope = document.getElementById("growthSlope");
 
 if (trendLine) trendLine.setAttribute("points", points);
 
@@ -37,3 +40,12 @@ if (weekRow) {
     weekRow.appendChild(span);
   });
 }
+
+const first = growthData[0];
+const last = growthData[growthData.length - 1];
+const avgIncrease = ((last - first) / (growthData.length - 1)).toFixed(1);
+const slope = (growthData[growthData.length - 1] - growthData[growthData.length - 4]) / 3;
+
+if (starTotal) starTotal.textContent = `${last}+`;
+if (weeklyAvg) weeklyAvg.textContent = `+${avgIncrease}`;
+if (growthSlope) growthSlope.textContent = slope.toFixed(1);

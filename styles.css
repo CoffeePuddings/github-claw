@@ -7,6 +7,22 @@
   --accent-2: #86efac;
 }
 
+.skip-link {
+  position: absolute;
+  top: -42px;
+  left: 10px;
+  background: #e2e8f0;
+  color: #0f172a;
+  border-radius: 8px;
+  padding: 8px 12px;
+  z-index: 10;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 10px;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -44,6 +60,9 @@ body {
 }
 
 .nav {
+  position: sticky;
+  top: 10px;
+  z-index: 5;
   margin-top: 18px;
   padding: 14px 18px;
   display: flex;
@@ -73,6 +92,12 @@ body {
 
 .nav a:hover {
   color: #fff;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid #7dd3fc;
+  outline-offset: 2px;
 }
 
 .hero-grid {
@@ -125,6 +150,22 @@ h1 {
   flex-wrap: wrap;
 }
 
+.trust-row {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.trust-pill {
+  font-size: 0.78rem;
+  color: #c7d2fe;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(129, 140, 248, 0.4);
+  background: rgba(79, 70, 229, 0.2);
+}
+
 .btn {
   border: 1px solid transparent;
   border-radius: 12px;
@@ -146,6 +187,14 @@ h1 {
 .btn-ghost {
   color: #dbeafe;
   border-color: rgba(148, 163, 184, 0.4);
+}
+
+.btn-soft {
+  display: inline-block;
+  margin-top: 10px;
+  color: #e2e8f0;
+  border: 1px solid rgba(125, 211, 252, 0.35);
+  background: rgba(15, 23, 42, 0.4);
 }
 
 .metric-list {
@@ -179,10 +228,32 @@ h1 {
 
 .content-card {
   padding: 22px;
+  transition: transform 0.25s ease, border-color 0.25s ease;
 }
 
 .content-card p {
   color: var(--muted);
+}
+
+.content-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(56, 189, 248, 0.6);
+}
+
+.mini-tags {
+  margin-top: 14px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mini-tags span {
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  color: #c4b5fd;
+  background: rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(167, 139, 250, 0.35);
+  border-radius: 999px;
 }
 
 .timeline {
@@ -259,6 +330,30 @@ time {
   margin-top: -4px;
 }
 
+.growth-metrics {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.growth-metrics div {
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.growth-metrics span {
+  color: var(--muted);
+  display: block;
+  font-size: 0.82rem;
+}
+
+.growth-metrics strong {
+  font-size: 1.2rem;
+}
+
 .footer {
   text-align: center;
   color: var(--muted);
@@ -275,5 +370,9 @@ time {
   .log-item {
     grid-template-columns: 1fr;
     gap: 6px;
+  }
+
+  .growth-metrics {
+    grid-template-columns: 1fr;
   }
 }

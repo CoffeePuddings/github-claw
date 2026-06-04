@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
+    <a class="skip-link" href="#featured">跳到主内容</a>
     <div class="noise"></div>
     <header class="hero section">
       <nav class="nav card">
@@ -30,7 +31,7 @@
         <a class="btn btn-primary" href="https://github.com/CoffeePuddings/ai-guide" target="_blank" rel="noreferrer">访问仓库</a>
       </nav>
 
-      <main id="top" class="hero-grid">
+      <main id="top" class="hero-grid" aria-label="首页概览">
         <section class="hero-main card glow">
           <p class="tag">Open Source · AI Learning Hub</p>
           <h1>一站式 AI 知识库导航官网</h1>
@@ -42,6 +43,11 @@
             <a class="btn btn-primary" href="https://github.com/CoffeePuddings/ai-guide" target="_blank" rel="noreferrer">⭐ Star ai-guide</a>
             <a class="btn btn-ghost" href="#featured">开始浏览</a>
           </div>
+          <div class="trust-row" aria-label="项目可信信号">
+            <span class="trust-pill">持续更新</span>
+            <span class="trust-pill">开源友好</span>
+            <span class="trust-pill">实战导向</span>
+          </div>
         </section>
 
         <aside class="hero-side card">
@@ -52,27 +58,31 @@
             <li><span>最近更新</span><strong>每周</strong></li>
             <li><span>学习路线</span><strong>初级→高级</strong></li>
           </ul>
+          <a class="btn btn-soft" href="https://github.com/CoffeePuddings/ai-guide/issues" target="_blank" rel="noreferrer">参与共建 →</a>
         </aside>
       </main>
     </header>
 
-    <section id="featured" class="section">
+    <section id="featured" class="section" aria-labelledby="featuredTitle">
       <div class="section-title">
-        <h2>精选内容</h2>
+        <h2 id="featuredTitle">精选内容</h2>
         <p>围绕实战价值筛选，帮助访问者快速进入高价值章节。</p>
       </div>
       <div class="cards-grid">
         <article class="card content-card">
           <h3>LLM 基础与提示工程</h3>
           <p>从模型认知到 Prompt 结构化设计，覆盖可复用思维框架。</p>
+          <div class="mini-tags"><span>入门</span><span>高频</span><span>必读</span></div>
         </article>
         <article class="card content-card">
           <h3>RAG 与知识库构建</h3>
           <p>检索增强流程、向量索引、评估指标与落地范式。</p>
+          <div class="mini-tags"><span>进阶</span><span>架构</span><span>实战</span></div>
         </article>
         <article class="card content-card">
           <h3>AI Agent 实战</h3>
           <p>工具调用、任务编排、记忆体系与生产场景经验。</p>
+          <div class="mini-tags"><span>热门</span><span>工程化</span><span>案例</span></div>
         </article>
       </div>
     </section>
@@ -121,6 +131,11 @@
           </defs>
         </svg>
         <div class="week-row" id="weekRow"></div>
+        <div class="growth-metrics">
+          <div><span>当前 Star</span><strong id="starTotal">0</strong></div>
+          <div><span>周均新增</span><strong id="weeklyAvg">0</strong></div>
+          <div><span>增长斜率</span><strong id="growthSlope">0</strong></div>
+        </div>
       </div>
     </section>
 

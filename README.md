@@ -7,6 +7,10 @@
 - 更新日志
 - 增长趋势可视化
 
+## UI-UX-PRO-MAX 技能
+
+已安装项目级技能：`/tmp/workspace/CoffeePuddings/github-claw/.agents/skills/UI-UX-PRO-MAX/skill.yml`，用于持续优化页面视觉层级、交互反馈和转化体验。
+
 ## 本地预览
 
 在仓库根目录运行：
