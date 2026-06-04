@@ -1,0 +1,123 @@
+name: 每日 AI 科技热点日报
+
+on:
+  schedule:
+    # 北京时间 13:00 = UTC 05:00
+    - cron: '0 5 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  issues: write
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 收集并发布 AI 日报
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const https = require('https');
+
+            function fetchJson(url) {
+              return new Promise((resolve, reject) => {
+                https.get(url, { headers: { 'User-Agent': 'github-claw-digest/1.0' } }, res => {
+                  let data = '';
+                  res.on('data', c => data += c);
+                  res.on('end', () => {
+                    try { resolve(JSON.parse(data)); }
+                    catch (e) { reject(e); }
+                  });
+                }).on('error', reject);
+              });
+            }
+
+            // ── 1. HackerNews：过去 7 天 AI 相关热门帖 ──────────────────────────
+            const sevenDaysAgo = Math.floor(Date.now() / 1000) - 7 * 86400;
+            const hnQuery = encodeURIComponent('AI OR LLM OR "machine learning" OR "artificial intelligence" OR "deep learning" OR "neural network"');
+            const hnUrl = `https://hn.algolia.com/api/v1/search?query=${hnQuery}&tags=story&numericFilters=created_at_i>${sevenDaysAgo},points>20&hitsPerPage=15&attributesToRetrieve=objectID,title,url,points,num_comments,created_at`;
+
+            let hnItems = [];
+            try {
+              const hnData = await fetchJson(hnUrl);
+              hnItems = (hnData.hits || []).slice(0, 10);
+            } catch (e) {
+              core.warning(`HackerNews fetch failed: ${e.message}`);
+            }
+
+            // ── 2. GitHub Trending（通过非官方 JSON 端点）────────────────────────
+            const trendingUrl = 'https://api.gitterapp.com/repositories?language=&since=weekly';
+            let trendingItems = [];
+            try {
+              const trendData = await fetchJson(trendingUrl);
+              trendingItems = (Array.isArray(trendData) ? trendData : [])
+                .filter(r => {
+                  const desc = (r.description || '').toLowerCase();
+                  const name = (r.name || '').toLowerCase();
+                  const kw = ['ai', 'llm', 'gpt', 'ml', 'neural', 'diffusion', 'transformer', 'agent'];
+                  return kw.some(k => desc.includes(k) || name.includes(k));
+                })
+                .slice(0, 8);
+            } catch (e) {
+              core.warning(`GitHub Trending fetch failed: ${e.message}`);
+            }
+
+            // ── 3. 组装 Issue 内容 ──────────────────────────────────────────────
+            const now = new Date();
+            const bjTime = new Date(now.getTime() + 8 * 3600 * 1000);
+            const dateStr = bjTime.toISOString().slice(0, 10);
+
+            // 计算本周范围
+            const weekDay = bjTime.getUTCDay(); // 0=Sun
+            const mondayOffset = weekDay === 0 ? -6 : 1 - weekDay;
+            const monday = new Date(bjTime.getTime() + mondayOffset * 86400 * 1000);
+            const weekLabel = `${monday.toISOString().slice(0, 10)} ~ ${dateStr}`;
+
+            let body = `# 🤖 AI 科技热点日报 · ${dateStr}\n\n`;
+            body += `> 本周（${weekLabel}）AI 领域精选热点，由 GitHub Actions 自动收集，每日北京时间 13:00 推送。\n\n`;
+
+            // HackerNews 部分
+            body += `## 🔥 HackerNews 热门讨论\n\n`;
+            if (hnItems.length === 0) {
+              body += `_暂无数据（可能是网络限制，请稍后手动查看 [HN](https://news.ycombinator.com)）_\n\n`;
+            } else {
+              for (const item of hnItems) {
+                const link = item.url || `https://news.ycombinator.com/item?id=${item.objectID}`;
+                const discussion = `https://news.ycombinator.com/item?id=${item.objectID}`;
+                const pts = item.points || 0;
+                const cmts = item.num_comments || 0;
+                body += `- **[${item.title}](${link})**\n`;
+                body += `  ⬆️ ${pts} 分 · 💬 ${cmts} 评论 · [讨论](${discussion})\n`;
+              }
+              body += '\n';
+            }
+
+            // GitHub Trending 部分
+            body += `## ⭐ GitHub Trending（本周 AI 相关）\n\n`;
+            if (trendingItems.length === 0) {
+              body += `_暂无数据（可能是网络限制，请稍后手动查看 [GitHub Trending](https://github.com/trending)）_\n\n`;
+            } else {
+              for (const repo of trendingItems) {
+                const repoUrl = `https://github.com/${repo.author}/${repo.name}`;
+                const stars = repo.currentPeriodStars !== undefined
+                  ? `本周 +${repo.currentPeriodStars} ⭐`
+                  : `总 ${repo.stars || '?'} ⭐`;
+                const desc = repo.description ? ` — ${repo.description}` : '';
+                body += `- **[${repo.author}/${repo.name}](${repoUrl})**${desc}\n`;
+                body += `  ${stars}\n`;
+              }
+              body += '\n';
+            }
+
+            body += `---\n_自动生成 · [查看工作流](.github/workflows/daily-ai-digest.yml)_\n`;
+
+            // ── 4. 创建 Issue ───────────────────────────────────────────────────
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `📰 AI 日报 ${dateStr}`,
+              body,
+              labels: ['ai-digest'],
+            });
+
+            core.info(`✅ 日报 Issue 已创建：${dateStr}`);
