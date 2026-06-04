@@ -1,3 +1,4 @@
+// === Chart Data ===
 const growthData = [124, 139, 153, 171, 198, 216, 238, 267, 301, 338, 390, 452];
 const svgWidth = 620;
 const svgHeight = 220;
@@ -49,3 +50,76 @@ const slope = (growthData[growthData.length - 1] - growthData[growthData.length 
 if (starTotal) starTotal.textContent = `${last}+`;
 if (weeklyAvg) weeklyAvg.textContent = `+${avgIncrease}`;
 if (growthSlope) growthSlope.textContent = slope.toFixed(1);
+
+// === Scroll Progress Bar ===
+const scrollProgress = document.querySelector(".scroll-progress");
+function updateScrollProgress() {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  if (scrollProgress) scrollProgress.style.width = progress + "%";
+}
+
+// === Scroll-to-Top Button ===
+const scrollTopBtn = document.getElementById("scrollTopBtn");
+function updateScrollTopBtn() {
+  if (!scrollTopBtn) return;
+  if (window.scrollY > 400) {
+    scrollTopBtn.classList.add("visible");
+  } else {
+    scrollTopBtn.classList.remove("visible");
+  }
+}
+
+if (scrollTopBtn) {
+  scrollTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}
+
+// === Scroll-driven Entrance Animations ===
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function initFadeInObserver() {
+  if (prefersReducedMotion) {
+    document.querySelectorAll(".fade-in").forEach((el) => {
+      el.classList.add("visible");
+    });
+    return;
+  }
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+  );
+  document.querySelectorAll(".fade-in").forEach((el) => observer.observe(el));
+}
+
+// Add fade-in class to sections
+document.querySelectorAll(".section:not(.hero)").forEach((section) => {
+  section.classList.add("fade-in");
+});
+
+// Scroll event (throttled via rAF)
+let ticking = false;
+window.addEventListener("scroll", () => {
+  if (!ticking) {
+    window.requestAnimationFrame(() => {
+      updateScrollProgress();
+      updateScrollTopBtn();
+      ticking = false;
+    });
+    ticking = true;
+  }
+});
+
+// Initialize
+updateScrollProgress();
+updateScrollTopBtn();
+initFadeInObserver();
