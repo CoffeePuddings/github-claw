@@ -1,0 +1,42 @@
+{
+  "skill_name": "github-claw",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我把这个仓库变成一个小龙虾 AI 工作空间",
+      "expected_output": "Creates AGENTS.md, MEMORY.md, memory/ directory, and .github/copilot-instructions.md with appropriate content. May also create workflow files.",
+      "files": [],
+      "expectations": [
+        "AGENTS.md is created with agent identity and working rules",
+        "MEMORY.md is created with structured sections for preferences, decisions, context",
+        "memory/ directory is created with log/ subdirectory",
+        ".github/copilot-instructions.md references AGENTS.md and MEMORY.md"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Set up automated issue handling so Copilot auto-responds to issues labeled 'copilot'",
+      "expected_output": "Creates a GitHub Actions workflow that triggers on issue events and posts an auto-reply comment when the 'copilot' label is present.",
+      "files": [],
+      "expectations": [
+        "A workflow YAML file is created in .github/workflows/",
+        "The workflow triggers on issues with types [opened, labeled]",
+        "The workflow checks for 'copilot' label before acting",
+        "The workflow posts a comment using actions/github-script"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I want full automation - PR reviews, scheduled tasks, and issue auto-assignment. Install everything.",
+      "expected_output": "Runs the full preset installation creating all workflow files, memory system, and agent identity.",
+      "files": [],
+      "expectations": [
+        "copilot-autofix.yml workflow is created for issue auto-assignment",
+        "copilot-review.yml workflow is created for PR reviews",
+        "copilot-scheduled.yml workflow is created for cron tasks",
+        "All core files (AGENTS.md, MEMORY.md, memory/) are set up",
+        "The install uses the 'full' preset configuration"
+      ]
+    }
+  ]
+}
