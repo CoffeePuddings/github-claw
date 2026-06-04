@@ -27,13 +27,52 @@
 |-------------|------|
 | `MEMORY.md` | **长期记忆**：用户偏好、重要决策、项目背景、已知事项 |
 | `memory/log/YYYY-MM-DD.md` | **临时记录**：进行中的任务、实验笔记（可定期清理） |
-| `memory/skills.md` | **技能清单**：已掌握的工具、常用命令、惯用模式（按需创建） |
 
 **操作规则：**
 1. 对话中发现值得长期记住的信息 → 写入 `MEMORY.md` 对应章节
 2. 多步骤任务或调研过程 → 可在 `memory/log/` 写阶段笔记
 3. 每次任务结束前，检查是否有新内容需要持久化
 4. `MEMORY.md` 保持简洁，定期归并或清理过时条目
+
+---
+
+## 技能管理
+
+项目级技能统一保存在 `.agents/skills/`，每个技能使用独立目录。
+
+### 技能发现
+
+```bash
+# 查看所有已注册技能
+ls .agents/skills/
+
+# 查看某技能详情
+cat .agents/skills/<skill-name>/skill.yml
+```
+
+### 技能目录结构
+
+```
+.agents/skills/
+├── README.md               ← 技能总索引（发现入口）
+└── <skill-name>/
+    ├── skill.yml           ← 技能清单（名称、版本、依赖、用法）
+    └── ...                 ← 实现文件
+```
+
+### 使用技能的流程
+
+1. **发现**：`ls .agents/skills/` 或读取 `.agents/skills/README.md`
+2. **了解**：读取目标技能的 `skill.yml`，确认依赖（`requires` 字段）
+3. **安装**：若 `skill.yml` 有 `install` 字段，执行其中命令
+4. **使用**：按 `skill.yml` 中 `usage` 字段的说明执行
+
+### 添加新技能
+
+1. 在 `.agents/skills/<skill-name>/` 创建目录
+2. 创建 `skill.yml`（参考现有技能格式）
+3. 添加实现文件（脚本等）
+4. 更新 `.agents/skills/README.md` 中的已注册技能列表
 
 ---
 
@@ -49,5 +88,5 @@
 ## 扩展约定
 
 - 代码按正常软件工程惯例组织（`src/`、`docs/` 等）
-- 新工具或自动化脚本记录在 `memory/skills.md`
+- 新工具或自动化脚本封装为技能，保存在 `.agents/skills/<skill-name>/`
 - 不过度设计结构——按需创建文件，不提前搭空架子

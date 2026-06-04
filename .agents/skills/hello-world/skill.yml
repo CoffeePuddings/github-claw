@@ -1,0 +1,6 @@
+name: hello-world
+description: "示例技能，验证技能发现与使用机制是否正常工作"
+version: "1.0.0"
+requires: []
+usage: |
+  bash .agents/skills/hello-world/run.sh
